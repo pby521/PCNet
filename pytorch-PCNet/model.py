@@ -80,27 +80,6 @@ class ConvBNAct(nn.Module):
         return result
 
 
-class SqueezeExcite(nn.Module):
-    def __init__(self,
-                 input_c: int,  # block input channel
-                 expand_c: int,  # block expand channel
-                 se_ratio: float = 0.25):
-        super(SqueezeExcite, self).__init__()
-        squeeze_c = int(input_c * se_ratio)
-        self.conv_reduce = nn.Conv2d(expand_c, squeeze_c, 1)
-        self.act1 = nn.SiLU()  # alias Swish
-        self.conv_expand = nn.Conv2d(squeeze_c, expand_c, 1)
-        self.act2 = nn.Sigmoid()
-
-    def forward(self, x: Tensor) -> Tensor:
-        scale = x.mean((2, 3), keepdim=True)
-        scale = self.conv_reduce(scale)
-        scale = self.act1(scale)
-        scale = self.conv_expand(scale)
-        scale = self.act2(scale)
-        return scale * x
-
-
 class MBConv(nn.Module):
     def __init__(self,
                  kernel_size: int,
