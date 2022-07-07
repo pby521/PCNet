@@ -2,13 +2,11 @@ import math
 from collections import OrderedDict
 from functools import partial
 from typing import Callable, Optional
-
 import torch.nn as nn
 import torch
 from torch import Tensor
 from torch.nn import init
-
-from pytorch_classification.Test11_efficientnetV2.attention import CoordAtt
+from attention import CoordAtt
 
 
 def drop_path(x, drop_prob: float = 0., training: bool = False):
